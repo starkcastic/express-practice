@@ -44,29 +44,59 @@ app.post('/' , (req , res) => {
 })
 
 app.put('/' , (req , res) => {
-    for(let i=0; i<users[0].kidneys.length; i++){
-        users[0].kidneys[i].healthy = true;
-    }
-
-    res.json({
-        msg : "update Done!"
-    })
-})
-
-app.delete('/' , (req , res) => {
-    let newKidneys = [];
+    let flg = false;
 
     for(let i=0; i<users[0].kidneys.length; i++){
-        if(users[0].kidneys[i].healthy){
-            newKidneys.push(users[0].kidneys[i]);
+        if(users[0].kidneys[i].healthy == false){
+            flg = true;
+            break;
         } 
     }
 
-    users[0].kidneys = newKidneys;
+    if(flg == false){
+        res.status(411).json({
+            msg : "No bad kidneys present"
+        })
+    }else{
+        for(let i=0; i<users[0].kidneys.length; i++){
+            users[0].kidneys[i].healthy = true;
+        }
 
-    res.json({
-        msg : "unhealthy kidney removed"
-    })
+        res.json({
+            msg : "update Done!"
+        })
+    }
+})
+
+app.delete('/' , (req , res) => {
+    let flg = false;
+
+    for(let i=0; i<users[0].kidneys.length; i++){
+        if(users[0].kidneys[i].healthy == false){
+            flg = true;
+            break;
+        } 
+    }
+
+    if(flg == false){
+        res.status(411).json({
+            msg : "No bad kidneys present"
+        })
+    }else{
+        let newKidneys = [];
+
+        for(let i=0; i<users[0].kidneys.length; i++){
+            if(users[0].kidneys[i].healthy){
+                newKidneys.push(users[0].kidneys[i]);
+            } 
+        }
+
+        users[0].kidneys = newKidneys;
+
+        res.json({
+            msg : "unhealthy kidney removed"
+        })
+    }
 })
 
 
